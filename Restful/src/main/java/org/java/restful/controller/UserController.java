@@ -1,5 +1,8 @@
 package org.java.restful.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.java.restful.dto.UserDto;
@@ -16,12 +19,25 @@ import org.springframework.web.context.request.WebRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Tag(
+        name="CRUD REST APIs for User Resource",
+        description = "Create,Update,Get,Get All,Delete"
+)
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/users")
 public class UserController {
 
     private UserService userService;
+
+    @Operation(
+            summary = "Create User REST API",
+            description = "Create User REST API is used to save user in a database"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "HTTP Status 201 CREATED"
+    )
 
     //build create user REST API
     @PostMapping("createuser")
@@ -31,11 +47,29 @@ public class UserController {
     }
 
     //build get usr by id  Rest API
+
+    @Operation(
+            summary = "Get User by id REST API",
+            description = "Get User by id REST API is used to get a single user from a database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status 200 OK"
+    )
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId){
         UserDto user=userService.getUserById(userId);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    @Operation(
+            summary = "Get All Users REST API",
+            description = "Get All Users REST API is used to get all user from a database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status 200 OK"
+    )
 
     @GetMapping("allusers")
     public ResponseEntity<List<UserDto>> getAllUsers(){
@@ -43,12 +77,29 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Update User REST API",
+            description = "Update User REST API is used to update a particular user in a database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status 200 OK"
+    )
     @PutMapping("{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId,@RequestBody @Valid UserDto user){
         user.setId(userId);
         UserDto updatedUser= userService.updateUser(user);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
+
+    @Operation(
+            summary = "Delete User REST API",
+            description = "Delete User REST API is used to delete a particular user in a database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status 200 OK"
+    )
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") Long userId){
